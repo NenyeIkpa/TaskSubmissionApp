@@ -76,7 +76,7 @@ public class AuthController {
 			UserDetails userDetails = userDetailsService.loadUserByUsername(request.username());
 			String token = jwtService.GenerateToken(userDetails.getUsername());
 			
-			AuthCredentialsResponse response = new AuthCredentialsResponse(token, userDetails.getUsername());
+			AuthCredentialsResponse response = new AuthCredentialsResponse("success", userDetails.getUsername());
 			
 			return ResponseEntity.ok()
 					.header(HttpHeaders.AUTHORIZATION, token)
