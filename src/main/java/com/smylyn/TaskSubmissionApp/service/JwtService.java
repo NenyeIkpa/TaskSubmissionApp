@@ -29,7 +29,7 @@ public class JwtService {
 	@Value("${jwt.secret}")
     public String SECRET;
     
-    public static final Long JWT_TOKEN_VALIDITY = 30 * 24 * 60 * 60L;
+    public static final int JWT_TOKEN_VALIDITY = 30 * 24 * 60 * 60;
     
 
         public String extractUsername(String token) {

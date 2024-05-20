@@ -1,35 +1,29 @@
 
 import './App.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import Dashboard from './component/Dashboard';
+import { Route, Routes } from 'react-router-dom';
+import HomePage from './component/HomePage';
+import Login from './component/Login';
+import PrivateRoute from './PrivateRoute';
+import TaskView from './component/TaskView';
 
-function App() {
-  console.log("Hello World!");
-
-  const reqBody = {
-    username: "hello@gmail.com",
-    password: "hello"
-  }
-fetch("api/v1/auth/login", {
-  headers: {
-    "Content-Type": "application/json"
-  },
-  method: "post",
-  body: JSON.stringify(reqBody)
-})
-.then((response) => {
-  return Promise.all([response.json(), response.headers]);
-  // console.log(response.headers.get("Authorization"));
-  // return response.json()
-})
-.then(([body, headers]) =>{
-  const token = headers.get("Authorization")
-   console.log(token)
-   console.log(body);
-  })
-
+function App() {  
   return (
-    <div className="App">
-      <h1>Hello World</h1>
-    </div>
+    <Routes>
+      <Route path="/dashboard" element = { 
+      <PrivateRoute>
+        <Dashboard />
+        </PrivateRoute>} />
+        <Route path='/tasks/:id' element = {
+          <PrivateRoute>
+            <TaskView />
+          </PrivateRoute>
+        } />
+      <Route path="/" element = { <HomePage/> } />
+      <Route path="/login" element = { <Login/> } />
+
+    </Routes>
   );
 }
 

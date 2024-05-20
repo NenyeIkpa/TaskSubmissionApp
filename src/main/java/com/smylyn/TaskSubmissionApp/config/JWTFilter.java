@@ -3,6 +3,8 @@ package com.smylyn.TaskSubmissionApp.config;
 import java.io.IOException;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -28,13 +30,17 @@ public class JWTFilter extends OncePerRequestFilter {
 	
 	@Autowired
 	private JwtService jwtService;
+	
+	private Logger log = LoggerFactory.getLogger(JWTFilter.class);
 
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
 		// get authorization header and validate
 		final String header = request.getHeader(HttpHeaders.AUTHORIZATION);
-		if (header == null || header.startsWith("Bearer ")) {
+		log.info(request.getHeader(HttpHeaders.AUTHORIZATION));
+		if (header == null || !header.startsWith("Bearer ")) {
+			log.info("header is null / No Bearer");
 			filterChain.doFilter(request, response);
 			return;
 		}
@@ -46,6 +52,7 @@ public class JWTFilter extends OncePerRequestFilter {
 		UserDetails userDetails = userRepository.findByUsername(jwtService.extractUsername(token)).orElse(null);
 		
 		if (!jwtService.validateToken(token, userDetails)) {
+			log.info("invalid token");
 			filterChain.doFilter(request, response);
 			return;
 		}
